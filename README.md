@@ -79,9 +79,20 @@ long long int i = (long long int)dict_get(dict, key, &type);
 
 ### info hash
 The info hash of the torrent file is stored in the `struct be_dict` as an
-array of `unsigned char`. You can access it by `dict->info_hash`. Please
-check if `dict->has_info_hash` is set to true before doing anything with the
-actual hash to prevent undefined behaviour.
+array of 3-byte-long strings. Each element is a hex representation of the
+SHA1 hashed byte (2 byte long) (`241`(dec) will be stored as `F1`(hex))
+followed by a null terminator. So actually `241` will be stored as `F1\0`.
+Using info_hash:
+```C
+// SHA_DIGEST_LENGTH can be replaced by 20
+for(int i=0; i<SHA_DIGEST_LENGTH; ++i) {
+	// hex representation
+	char *hex_rep = dict->info_hash[i];
+	if(i>0) printf(":");
+	printf("%s", hex_rep);
+}
+```
+Output will be of the form `F1:FC:DC:14:62:D3:65:30:F5:26:C1:D9:40:2E:EC:91:00:B7:BA:18`;
 
 ### running the tests
 The `tests/test.c` is more of a demonstration file. You should have a look

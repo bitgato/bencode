@@ -144,10 +144,16 @@ decode(unsigned char **buffer, size_t *len, be_type *type)
 				if(strcmp("info", (char*)key)==0 && val_type==BE_DICT) {
 					// The length of info dictionary
 					size_t len = (*buffer - orig_buff);
+					unsigned char hash[SHA_DIGEST_LENGTH];
 					// Note that the 'len' argument means only the first
 					// 'len' bytes from orig_buff are hashed, meaning
 					// only the bencoded info dictionary till the 'e'
-					SHA1(orig_buff, len, dict->info_hash);
+					SHA1(orig_buff, len, hash);
+					// Store the hex representation of the 20 hash bytes
+					// as strings in the info_hash of the dictionary
+					for(int i=0; i<SHA_DIGEST_LENGTH; ++i) {
+						sprintf(dict->info_hash[i], "%02X", hash[i]);
+					}
 					dict->has_info_hash = true;
 				}
 			}
