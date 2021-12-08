@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <sys/stat.h>
+#include <openssl/sha.h>
 
 #include "bencode.h"
 
@@ -120,6 +121,10 @@ decode(unsigned char **buffer, size_t *len, be_type *type)
 					return NULL;
 				}
 
+				// To copy the buffer later if the value is found to
+				// be the info dictionary
+				unsigned char *orig_buff = *buffer;
+
 				val = decode(buffer, len, &val_type);
 
 				if((val==NULL && val_type!=BE_INT) || *len<=0) {
@@ -132,6 +137,18 @@ decode(unsigned char **buffer, size_t *len, be_type *type)
 					free(key);
 					dict_destroy(dict);
 					return NULL;
+				}
+
+				// If the key is info and it's a dictionary, save the sha1
+				// hash for later use
+				if(strcmp("info", (char*)key)==0 && val_type==BE_DICT) {
+					// The length of info dictionary
+					size_t len = (*buffer - orig_buff);
+					// Note that the 'len' argument means only the first
+					// 'len' bytes from orig_buff are hashed, meaning
+					// only the bencoded info dictionary till the 'e'
+					SHA1(orig_buff, len, dict->info_hash);
+					dict->has_info_hash = true;
 				}
 			}
 			*type = BE_DICT;
@@ -146,19 +163,25 @@ decode(unsigned char **buffer, size_t *len, be_type *type)
 }
 
 void
+hex_dump(unsigned char *str, size_t len)
+{
+	for(size_t i=0; i<len; ++i) {
+		if(i>0) printf(":");
+		printf("%02X", str[i]);
+	}
+	printf("\n");
+}
+
+void
 dict_val_print(unsigned char *key, void *val, be_type type)
 {
 	if(key!=NULL) printf("%s: ", key);
 	switch(type) {
 		case BE_STR: {
 			be_string *string = val;
-			// If the key is pieces, print the bytes in hex form
+			// If the key is pieces, print the bytes in hex form by default
 			if(key!=NULL && strcmp("pieces", (char*)key)==0) {
-				for(size_t i=0; i<string->len; ++i) {
-					if(i>0) printf(":");
-					printf("%02X", string->str[i]);
-				}
-				printf("\n");
+				hex_dump(string->str, string->len);
 			}
 			else printf("%s\n", string->str);
 			break;
@@ -203,13 +226,14 @@ decode_file(const char *file)
 
 	if(len<=0) return NULL;
 
-	buffer = malloc(len);
+	buffer = malloc(len+1);
 	if(buffer==NULL) return NULL;
 	if(fread(buffer, 1, len, fp)<len) {
 		free(buffer);
 		fclose(fp);
 		return NULL;
 	}
+	buffer[len] = '\0';
 
 	stored_buff = buffer; // For freeing after decoding
 

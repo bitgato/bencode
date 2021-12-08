@@ -2,10 +2,11 @@
 #define BENCODE_H
 
 #include <stddef.h>
+#include <stdbool.h>
 
 #define INIT_CAP 32
 #define FNV_OFF 2166136261UL // FNV1a 32 bit offset
-#define FNV_PRIME 16777619UL // FNVI1a 32 bti prime
+#define FNV_PRIME 16777619UL // FNVI1a 32 bit prime
 
 typedef enum
 {
@@ -40,6 +41,13 @@ typedef struct be_dict
 {
 	size_t capacity;
 	size_t length;
+    // Please check if this is set to true before doing anything with
+    // the actual hash
+    bool has_info_hash;
+    // The info_hash (SHA1 hash of the info dictionary)
+    // 20 is used instead of SHA_DIGEST_LENGTH to prevent including
+    // <openssl/sha.h> in this header file
+    unsigned char info_hash[20];
 	struct be_node *entries;
 } be_dict;
 
@@ -47,11 +55,24 @@ typedef struct be_dict
  * Decodes a bencoded file
  * @param file The path of the bencoded file
  * @return The outer dictionary or NULL if the file is not
- * properly bencoded. The returned dicitonary should be free'd
+ * properly bencoded. The returned dicitonary should be freed
  * with dict_destroy after use
  * @see dict_destroy
  */
 be_dict *decode_file (const char *file);
+
+/**
+ * Decodes a bencoded buffer. Buffer should be `unsigned char *`
+ * @param buffer The pointer to the buffer
+ * @param len Address of the stored length of the buffer
+ * @param type Address of a be_type variable so that the type of the
+ * returned value can be stored in it
+ * @return The outer dictionary or NULL if the file is not
+ * properly bencoded. The returned dicitonary should be freed
+ * with dict_destroy after use
+ * @see dict_destroy
+ */
+void *decode (unsigned char **buffer, size_t *len, be_type *type);
 
 /**
  * Creates an empty dictionary. The dictionary needs to be freed by
@@ -110,15 +131,25 @@ be_list *list_create (be_node node);
 be_list *list_add (be_list *list, be_node node);
 
 /**
- * Frees a list of bencoded nodes
- * @param list The list to be free'd
+ * Frees a list of bencoded nodes. Generally. no need to use this as
+ * callign dict_destroy() will free the lists in a dictionary anyways
+ * @param list The list to be freed
+ * @see dict_destroy
  */
 void list_free (be_list *list);
 
 /**
- * Prints the values in a dictionary to STDOUT
+ * Prints the values in a dictionary to stdout
  * @param dict The dictionary to be dumped
  */
 void dict_dump (be_dict *dict);
+
+/**
+ * Dumps a string in hex form. Used generally for printing the 'pieces'
+ * string and 'info_hash'
+ * @param str The string to be dumped
+ * @param len Length of the string
+ */
+void hex_dump(unsigned char *str, size_t len);
 
 #endif /* BENCODE_H */

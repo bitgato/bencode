@@ -5,6 +5,9 @@ Hash algorithm used is FNV-1a (32 bit).
 Also note that all string related data is read/returned as `unsigned char*`
 and not as `char*`.
 
+**NOTE: You need the openssl library installed so that info_hash can be
+calculated**
+
 ### decoding a bencoded torrent file
 ```C
 be_dict *dict = decode_file(const char *file);
@@ -12,6 +15,18 @@ be_dict *dict = decode_file(const char *file);
 This will return the outermost dictionary in the torrent file or `NULL` if an
 error occurs. Note that this does not differentiate between the cases where
 the file doesn't exist or a syntax error occurs.
+
+### decoding from buffer
+```C
+unsigned char *buffer;
+size_t len;
+be_type type;
+// ... Initialize the buffer and length
+be_dict *dict = decode(&buffer, &len, &type);
+```
+This will return `NULL` only when a syntax error is present. This way, you can
+check for syntax errors and problems with reading files separately. But you
+will need to check the `type` manually.
 
 ### freeing the created dictionary
 Should always be done after the dictionary is used. There's no need to
@@ -61,6 +76,23 @@ Integers are stored as `long long int` here.
 be_type type;
 long long int i = (long long int)dict_get(dict, key, &type);
 ```
+
+### info hash
+The info hash of the torrent file is stored in the `struct be_dict` as an
+array of `unsigned char`. You can access it by `dict->info_hash`. Please
+check if `dict->has_info_hash` is set to true before doing anything with the
+actual hash to prevent undefined behaviour.
+
+### running the tests
+The `tests/test.c` is more of a demonstration file. You should have a look
+to see how some things work. You can compile and run it by:
+```shell
+cd tests
+gcc -Wall -g test.c ../bencode.c ../bencode.h ../dict.c -o test -lssl -lcrypto
+valgrind ./test
+```
+Using valgrind to detect any memory leaks is recommended. Please report if
+you find any.
 
 ### note
 Be sure to check all returned values for `NULL` and confirm the types before

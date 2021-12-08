@@ -23,6 +23,7 @@ dict_create()
 	be_dict *dict = malloc(sizeof(be_dict));
 	if(dict == NULL) return dict;
 	dict->length = 0;
+	dict->has_info_hash = false;
 	dict->capacity = INIT_CAP;
 
 	dict->entries = calloc(dict->capacity, sizeof(be_node));
