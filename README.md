@@ -29,11 +29,16 @@ check for syntax errors and problems with reading files separately. But you
 will need to check the `type` manually.
 
 ### freeing the created dictionary
-Should always be done after the dictionary is used. There's no need to
-`free` individual values or lists. Do this once after everything is done.
+Should always be done after the outermost dictionary is used. There's no need
+to `free` individual values or lists. Do this once after everything is done.
 ```C
 dict_destroy(dict);
+dict = NULL;
 ```
+**DO NOT** `free`, `list_free` or `dict_destroy` anything other than the
+outermost dictionary. It will cause double-freeing when freeing the outermost
+dictionary later. Set your outer dictionary to `NULL` after destroying it to
+prevent double-freeing as well.
 
 ### getting the value of a key
 ```C
@@ -57,8 +62,6 @@ while(list != NULL) {
 	list = list->next;
 }
 ```
-You generally don't need to manually free a list. It is handled by the
-`dict_destroy` function.
 
 ### strings
 Strings are stored in a `struct` that contain the string itself and the

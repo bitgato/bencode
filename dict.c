@@ -59,7 +59,6 @@ node_free(be_node node)
 			break;
 		}
 	}
-	node.val = NULL; // For safety from double freeing
 }
 
 be_list*
@@ -95,7 +94,6 @@ list_free(be_list *list)
 	node_free(list->node);
 	list_free(list->next);
 	free(list);
-	list = NULL; // For safety from double freeing
 }
 
 void
@@ -110,7 +108,6 @@ dict_destroy(be_dict *dict)
 	}
 	free(dict->entries);
 	free(dict);
-	dict = NULL; // For safety from double freeing
 }
 
 static unsigned char*
