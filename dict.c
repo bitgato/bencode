@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <openssl/sha.h>
 
 #include "bencode.h"
 
@@ -24,6 +25,8 @@ dict_create()
 	if(dict == NULL) return dict;
 	dict->length = 0;
 	dict->has_info_hash = false;
+	// Initialize all elements in info hash to 0
+	memset(dict->info_hash, 0, SHA_DIGEST_LENGTH);
 	dict->capacity = INIT_CAP;
 
 	dict->entries = calloc(dict->capacity, sizeof(be_node));

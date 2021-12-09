@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <openssl/sha.h>
 
 #define INIT_CAP 32
 #define FNV_OFF 2166136261UL // FNV1a 32 bit offset
@@ -44,12 +45,8 @@ typedef struct be_dict
     // Please check if this is set to true before doing anything with
     // the actual hash
     bool has_info_hash;
-    // The info_hash (SHA1 hash of the info dictionary) in hex representation
-    // 20 is used instead of SHA_DIGEST_LENGTH to prevent including
-    // <openssl/sha.h> in this header file
-    // 3 is used because hex representation of the byte takes 2 spaces
-    // and 1 for null terminating the individual string
-    char info_hash[20][3];
+    // The info_hash (SHA1 hash of the info dictionary)
+    unsigned char info_hash[SHA_DIGEST_LENGTH];
 	struct be_node *entries;
 } be_dict;
 

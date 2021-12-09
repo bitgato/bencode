@@ -19,14 +19,7 @@ test_file(const char *file)
 		// FB:4E:21:C8:42:74:A8:BA:AF:0F:E2:12:18:B5:94:2C:5C:02:14:06
 		// 21:DD:64:01:FE:71:25:0D:29:68:03:8D:D6:CA:07:EB:8D:60:DF:49
 		// Also check if the dictionary even has a info-hash
-		// if(dict->has_info_hash) hex_dump(dict->info_hash, 20);
-		if(dict->has_info_hash) {
-			for(int i=0; i<20; ++i) {
-				if(i>0) printf(":");
-				printf("%s", dict->info_hash[i]);
-			}
-			printf("\n");
-		}
+		if(dict->has_info_hash) hex_dump(dict->info_hash, SHA_DIGEST_LENGTH);
 
 		void *val; be_type type;
 		unsigned char *key = (unsigned char*)"info";
