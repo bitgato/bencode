@@ -6,6 +6,7 @@
 #include <openssl/sha.h>
 
 #include "bencode.h"
+#include "list.h"
 
 static uint32_t
 hash_key(unsigned char *key)

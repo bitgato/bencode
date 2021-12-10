@@ -6,6 +6,7 @@
 #include <openssl/sha.h>
 
 #include "bencode.h"
+#include "list.h"
 
 static be_string*
 decode_str(unsigned char **buffer, size_t *buff_len)

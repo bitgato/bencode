@@ -42,11 +42,11 @@ typedef struct be_dict
 {
 	size_t capacity;
 	size_t length;
-    // Please check if this is set to true before doing anything with
-    // the actual hash
-    bool has_info_hash;
-    // The info_hash (SHA1 hash of the info dictionary)
-    unsigned char info_hash[SHA_DIGEST_LENGTH];
+	// Please check if this is set to true before doing anything with
+	// the actual hash
+	bool has_info_hash;
+	// The info_hash (SHA1 hash of the info dictionary)
+	unsigned char info_hash[SHA_DIGEST_LENGTH];
 	struct be_node *entries;
 } be_dict;
 
@@ -115,27 +115,6 @@ unsigned char *dict_set (be_dict *dict, unsigned char *key, void *val,
  * @param type The type of the value to be printed
  */
 void dict_val_print (unsigned char *key, void *val, be_type type);
-
-/**
- * Creates a list of bencoded nodes
- * @param node Initial node
- */
-be_list *list_create (be_node node);
-
-/**
- * Adds a bencoded node to a list
- * @param list The list to which the node is to be added
- * @param node The node to be added
- */
-be_list *list_add (be_list *list, be_node node);
-
-/**
- * Frees a list of bencoded nodes. Generally. no need to use this as
- * callign dict_destroy() will free the lists in a dictionary anyways
- * @param list The list to be freed
- * @see dict_destroy
- */
-void list_free (be_list *list);
 
 /**
  * Prints the values in a dictionary to stdout
