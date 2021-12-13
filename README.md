@@ -92,7 +92,7 @@ The `tests/test.c` is more of a demonstration file. You should have a look
 to see how some things work. You can compile and run it by:
 ```shell
 cd tests
-gcc -Wall -g test.c ../bencode.c ../bencode.h ../dict.c -o test -lssl -lcrypto
+gcc -Wall -Wextra -g test.c ../bencode.c ../dict.c -o test -lssl -lcrypto
 valgrind ./test
 ```
 Using valgrind to detect any memory leaks is recommended. Please report if

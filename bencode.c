@@ -23,8 +23,8 @@ decode_str(unsigned char **buffer, size_t *buff_len)
 	*buffer = (unsigned char*)endp;
 	--(*buff_len); ++(*buffer); // Consume ':'
 
-	// If length is negative or we don't have enough buffer left
-	if(len<0 || len>*buff_len-1) return string;
+	// If we don't have enough buffer left
+	if(len>*buff_len-1) return string;
 
 	string = malloc(sizeof(be_string));
 	if(string==NULL) return NULL;

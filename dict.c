@@ -130,6 +130,7 @@ dict_set_entry(be_node *entries, size_t capacity, unsigned char *key,
 	entries[index].key = key;
 	entries[index].val = val;
 	entries[index].type = type;
+	++(*length);
 	return key;
 }
 
