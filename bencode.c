@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <sys/stat.h>
 #include <openssl/sha.h>
 
@@ -149,7 +148,7 @@ decode(unsigned char **buffer, size_t *len, be_type *type)
 					// 'len' bytes from orig_buff are hashed, that is,
 					// only the bencoded info dictionary till the 'e'
 					SHA1(orig_buff, len, dict->info_hash);
-					dict->has_info_hash = true;
+					dict->has_info_hash = 1;
 				}
 			}
 			*type = BE_DICT;

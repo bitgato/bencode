@@ -83,7 +83,7 @@ long long int i = (long long int)dict_get(dict, key, &type);
 ### info hash
 The info hash of the torrent file is stored in the `struct be_dict` as an
 array of `unsigned char`. You can access it by `dict->info_hash`. Please
-check if `dict->has_info_hash` is set to true before doing anything with the
+check if `dict->has_info_hash` is set to `1` before doing anything with the
 actual hash to prevent undefined behaviour. You can dump the info hash (or
 any string, really) in hex form with the `hex_dump` method.
 

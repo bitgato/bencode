@@ -2,7 +2,6 @@
 #define BENCODE_H
 
 #include <stddef.h>
-#include <stdbool.h>
 #include <openssl/sha.h>
 
 #define INIT_CAP 32
@@ -42,9 +41,9 @@ typedef struct be_dict
 {
 	size_t capacity;
 	size_t length;
-	// Please check if this is set to true before doing anything with
+	// Please check if this is set to 1 before doing anything with
 	// the actual hash
-	bool has_info_hash;
+	int has_info_hash;
 	// The info_hash (SHA1 hash of the info dictionary)
 	unsigned char info_hash[SHA_DIGEST_LENGTH];
 	struct be_node *entries;

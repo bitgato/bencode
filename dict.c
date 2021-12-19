@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include <openssl/sha.h>
 
 #include "bencode.h"
@@ -25,7 +24,7 @@ dict_create()
 	be_dict *dict = malloc(sizeof(be_dict));
 	if(dict == NULL) return dict;
 	dict->length = 0;
-	dict->has_info_hash = false;
+	dict->has_info_hash = 0;
 	// Initialize all elements in info hash to 0
 	memset(dict->info_hash, 0, SHA_DIGEST_LENGTH);
 	dict->capacity = INIT_CAP;
@@ -134,13 +133,13 @@ dict_set_entry(be_node *entries, size_t capacity, unsigned char *key,
 	return key;
 }
 
-static bool
+static int
 dict_expand(be_dict *dict)
 {
 	size_t new_cap = dict->capacity*2;
-	if(new_cap < dict->capacity) return false; // Overflow
+	if(new_cap < dict->capacity) return 0; // Overflow
 	be_node *new_entries = calloc(new_cap, sizeof(be_node));
-	if(new_entries == NULL) return false;
+	if(new_entries == NULL) return 0;
 
 	for(size_t i=0; i<dict->capacity; ++i) {
 		be_node entry = dict->entries[i];
@@ -153,7 +152,7 @@ dict_expand(be_dict *dict)
 	free(dict->entries);
 	dict->entries = new_entries;
 	dict->capacity = new_cap;
-	return true;
+	return 1;
 }
 
 void*
