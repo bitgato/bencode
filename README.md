@@ -1,5 +1,6 @@
 # bencode
----
+[![CodeFactor](https://www.codefactor.io/repository/github/bitgato/bencode/badge)](https://www.codefactor.io/repository/github/bitgato/bencode)
+
 A simple bencode parser which uses hash tables for dictionaries.
 Hash algorithm used is FNV-1a (32 bit).
 Also note that all string related data is read/returned as `unsigned char*`
