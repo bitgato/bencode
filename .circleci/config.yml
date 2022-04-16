@@ -12,6 +12,9 @@ jobs:
       - run:
           name: "Make and test"
           command: "make && make test"
+      - run:
+          name: "Codecov"
+          command: ".circleci/codecov"
 
 workflows:
   test-workflow:
