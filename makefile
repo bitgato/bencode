@@ -5,7 +5,9 @@ LIBS = -lssl -lcrypto
 SOURCE = bencode.c dict.h list.h
 TEST = test.c
 
-.PHONY: all test clean
+TARGET=test
+
+.PHONY: all $(TARGET) clean
 
 all: bencode.o dict.o
 
@@ -15,9 +17,9 @@ bencode.o: bencode.c bencode.h list.h
 dict.o: dict.c bencode.h list.h
 	$(CC) $(CFLAGS) dict.c -o $@ $(LIBS)
 
-test: bencode.o dict.o
-	$(CC) --coverage $(CCFLAGS) $(TEST) bencode.o dict.o -o $@ $(LIBS)
+$(TARGET): bencode.o dict.o
+	$(CC) $(CCFLAGS) $(TEST) bencode.o dict.o -o $@ $(LIBS)
 	valgrind --leak-check=full --error-exitcode=1 ./test
 
 clean:
-	rm -f test *.o *.gcno *gcda *.gcov
+	rm -f $(TARGET) *.o
