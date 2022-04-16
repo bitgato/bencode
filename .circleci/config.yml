@@ -14,6 +14,7 @@ jobs:
           command: "make && make test"
       - run:
           name: "Codecov"
+          when: on_success
           command: ".circleci/codecov"
 
 workflows:
