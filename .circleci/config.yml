@@ -1,0 +1,19 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: ubuntu-2004:202101-01
+    steps:
+      - checkout
+      - run:
+          name: "Install packages"
+          command: "sudo apt install -y libssl-dev valgrind"
+      - run:
+          name: "Make and test"
+          command: "make && make test"
+
+workflows:
+  test-workflow:
+    jobs:
+      - test

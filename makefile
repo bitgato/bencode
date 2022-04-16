@@ -3,7 +3,7 @@ CFLAGS = -c -Wall -Wextra
 LIBS = -lssl -lcrypto
 
 SOURCE = bencode.c dict.h list.h
-TEST = tests/test.c
+TEST = test.c
 
 .PHONY: all test clean
 
