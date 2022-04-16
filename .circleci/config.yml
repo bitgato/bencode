@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: "Install packages"
-          command: "sudo apt install -y libssl-dev valgrind"
+          command: ".circleci/install-pkgs-ubuntu"
       - run:
           name: "Make and test"
           command: "make && make test"
