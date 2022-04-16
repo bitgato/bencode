@@ -55,9 +55,9 @@ main()
 {
 	int len = 3;
 	const char *files[len];
-	files[0] = "torrents/ubuntu.torrent";
-	files[1] = "torrents/opensuse.torrent";
-	files[2] = "torrents/fedora.torrent";
+	files[0] = "tests/torrents/ubuntu.torrent";
+	files[1] = "tests/torrents/opensuse.torrent";
+	files[2] = "tests/torrents/fedora.torrent";
 	for(int i=0; i<len; ++i) {
 		if(!test_file(files[i])) {
 			printf("Failed\n");
