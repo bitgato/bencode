@@ -1,4 +1,5 @@
 # bencode
+[![CircleCI](https://circleci.com/gh/bitgato/bencode/tree/main.svg?style=shield)](https://circleci.com/gh/bitgato/bencode/tree/main)
 [![CodeFactor](https://www.codefactor.io/repository/github/bitgato/bencode/badge)](https://www.codefactor.io/repository/github/bitgato/bencode)
 
 A simple bencode parser which uses hash tables for dictionaries.
@@ -89,15 +90,13 @@ actual hash to prevent undefined behaviour. You can dump the info hash (or
 any string, really) in hex form with the `hex_dump` method.
 
 ### running the tests
-The `tests/test.c` is more of a demonstration file. You should have a look
+`test.c` is more of a demonstration file. You should have a look
 to see how some things work. You can compile and run it by:
 ```shell
-cd tests
-gcc -Wall -Wextra -g test.c ../bencode.c ../dict.c -o test -lssl -lcrypto
-valgrind ./test
+make && make test
 ```
-Using valgrind to detect any memory leaks is recommended. Please report if
-you find any.
+Using valgrind to detect any memory leaks is recommended (makefile already uses
+valgrind). Please report if you find any.
 
 ### note
 Be sure to check all returned values for `NULL` and confirm the types before
